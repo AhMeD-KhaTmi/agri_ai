@@ -9,6 +9,9 @@ djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+requests = "*"
+numpy = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

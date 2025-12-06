@@ -1,0 +1,104 @@
+.alerts {
+  padding: 2rem;
+}
+
+.alerts h1 {
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.alerts-loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+}
+
+.no-alerts {
+  text-align: center;
+  padding: 3rem;
+  background: #d4edda;
+  color: #155724;
+  border-radius: 8px;
+  font-size: 1.2rem;
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.alert-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.alert-header h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.severity-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.alert-details {
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.alert-details p {
+  margin: 0.5rem 0;
+}
+
+.recommendation-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-left: 4px solid #3498db;
+  border-radius: 4px;
+}
+
+.recommendation-box h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.recommendation-action {
+  font-weight: 600;
+  color: #27ae60;
+  margin: 0.5rem 0;
+}
+
+.recommendation-explanation {
+  color: #555;
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.confidence-tag {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: #ecf0f1;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
