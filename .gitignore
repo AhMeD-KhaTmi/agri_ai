@@ -1,0 +1,19 @@
+# Pipenv
+Pipfile.lock
+
+# Python
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+
+# Environment
+.env
+
+# VS Code
+.vscode/
+
+# Virtual environments
+venv/
+.env/
