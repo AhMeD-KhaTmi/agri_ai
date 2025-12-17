@@ -20,12 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%maj@2*+90^yp%@7$z_3_fl-(4l%o*%_8%wo^m7cpxnu_-96i_'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-%maj@2*+90^yp%@7$z_3_fl-(4l%o*%_8%wo^m7cpxnu_-96i_')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'backend']
 
 # Application definition
 INSTALLED_APPS = [
@@ -77,15 +77,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'agri_ai.wsgi.application'
 
-# PostgreSQL database configuration for local development
+# PostgreSQL database configuration (supports both local and Docker)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'agri_db',
-        'USER': 'agri_user',
-        'PASSWORD': 'agri_pass',
-        'HOST': 'localhost',  # direct local Postgres
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME', 'agri_db'),
+        'USER': os.getenv('DB_USER', 'agri_user'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'agri_pass'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),  # 'db' in Docker, 'localhost' locally
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 

@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${DB_NAME:-agri_db}
+      POSTGRES_USER: ${DB_USER:-agri_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-agri_pass}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-agri_user} -d ${DB_NAME:-agri_db}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build: .
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+    command: sh -c "python manage.py migrate && python create_default_user.py && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+    - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  simulator:
+    build:
+      context: ./simulator
+    environment:
+      - BACKEND_URL=http://backend:8000
+    command: ["python", "simulator.py", "--plots", "1", "--inject_anomaly", "--anomaly_every", "5", "--username", "farmer1", "--password", "testpw123"]
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

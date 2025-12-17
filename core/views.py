@@ -11,6 +11,9 @@ class RolePermission(BasePermission):
     def has_permission(self, request, view):
         if not request.user or not request.user.is_authenticated:
             return False
+        # Superusers always have admin permissions
+        if request.user.is_superuser and 'admin' in self.allowed_roles:
+            return True
         profile = getattr(request.user, 'userprofile', None)
         if not profile:
             return False
@@ -47,7 +50,7 @@ class AnomalyListView(generics.ListAPIView):
     def get_queryset(self):
         # Farmers see anomalies for their own plots, admins see all
         user = self.request.user
-        if hasattr(user, 'userprofile') and user.userprofile.role == 'admin':
+        if user.is_superuser or (hasattr(user, 'userprofile') and user.userprofile.role == 'admin'):
             return AnomalyEvent.objects.all()
         # Farmers see anomalies for plots in their farms
         return AnomalyEvent.objects.filter(plot__farm__owner=user)
@@ -60,7 +63,7 @@ class RecommendationListView(generics.ListAPIView):
     def get_queryset(self):
         # Farmers see recommendations for their own plots, admins see all
         user = self.request.user
-        if hasattr(user, 'userprofile') and user.userprofile.role == 'admin':
+        if user.is_superuser or (hasattr(user, 'userprofile') and user.userprofile.role == 'admin'):
             return AgentRecommendation.objects.all()
         # Farmers see recommendations for anomalies in their plots
         return AgentRecommendation.objects.filter(anomaly_event__plot__farm__owner=user)
@@ -73,7 +76,7 @@ class FieldPlotListView(generics.ListAPIView):
     def get_queryset(self):
         # Return plots from farms owned by the current user, or all plots if admin
         user = self.request.user
-        if hasattr(user, 'userprofile') and user.userprofile.role == 'admin':
+        if user.is_superuser or (hasattr(user, 'userprofile') and user.userprofile.role == 'admin'):
             return FieldPlot.objects.all()
         # Filter by farms owned by the user
         return FieldPlot.objects.filter(farm__owner=user)

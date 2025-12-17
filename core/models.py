@@ -70,7 +70,11 @@ class UserProfile(models.Model):
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)
+        profile = UserProfile.objects.create(user=instance)
+        # If user is a superuser, set role to admin
+        if instance.is_superuser:
+            profile.role = 'admin'
+            profile.save()
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

@@ -3,9 +3,12 @@ import random
 import requests
 import math
 import argparse
+import os
 
-API_URL = "http://127.0.0.1:8000/api/sensor-readings/"
-TOKEN_URL = "http://127.0.0.1:8000/api/token/"
+# Use environment variable for backend URL (Docker service name) or default to localhost
+BACKEND_URL = os.getenv('BACKEND_URL', 'http://127.0.0.1:8000')
+API_URL = f"{BACKEND_URL}/api/sensor-readings/"
+TOKEN_URL = f"{BACKEND_URL}/api/token/"
 
 # Argument parsing
 parser = argparse.ArgumentParser(description="Agri AI Sensor Data Simulator")
@@ -17,6 +20,31 @@ parser.add_argument("--token", type=str, help="JWT token for Authorization heade
 parser.add_argument("--username", type=str, help="Username to auto-login and get token")
 parser.add_argument("--password", type=str, help="Password for auto-login (optional, will prompt if not provided)")
 args = parser.parse_args()
+
+# Wait for backend to be ready (for Docker)
+def wait_for_backend(max_retries=30, delay=2):
+    """Wait for backend to be ready before starting"""
+    print(f"⏳ Waiting for backend at {BACKEND_URL}...")
+    for i in range(max_retries):
+        try:
+            response = requests.get(f"{BACKEND_URL}/api/token/", timeout=2)
+            if response.status_code in [200, 404, 401, 405]:  # Any response means backend is up
+                print("✅ Backend is ready!")
+                return True
+        except Exception:
+            if i < max_retries - 1:
+                if (i + 1) % 5 == 0:
+                    print(f"   Attempt {i+1}/{max_retries}: Backend not ready yet, retrying...")
+                time.sleep(delay)
+            else:
+                print(f"❌ Backend not available after {max_retries} attempts")
+                return False
+    return False
+
+# Wait for backend before proceeding
+if not wait_for_backend():
+    print("❌ Cannot connect to backend. Exiting.")
+    exit(1)
 
 # Auto-fetch token if username provided
 token = args.token
