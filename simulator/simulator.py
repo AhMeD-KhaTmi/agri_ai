@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(description="Agri AI Sensor Data Simulator")
 parser.add_argument("--plots", type=int, nargs='+', default=[1], help="List of plot IDs to simulate")
 parser.add_argument("--freq", type=float, default=5, help="Frequency (in seconds) between data sends")
 parser.add_argument("--inject_anomaly", action="store_true", help="Inject anomalies periodically for testing")
-parser.add_argument("--anomaly_every", type=int, default=5, help="Inject anomaly every Nth cycle (default: 5)")
+parser.add_argument("--anomaly_every", type=int, default=5, help="On average, inject 1 anomaly every N readings per sensor")
 parser.add_argument("--token", type=str, help="JWT token for Authorization header (optional if using --username)")
 parser.add_argument("--username", type=str, help="Username to auto-login and get token")
 parser.add_argument("--password", type=str, help="Password for auto-login (optional, will prompt if not provided)")
@@ -48,19 +48,10 @@ SEND_INTERVAL = args.freq
 print(f"\n🚀 Starting simulator for plots: {PLOT_IDS}")
 print(f"   Frequency: {SEND_INTERVAL}s between sends")
 if args.inject_anomaly:
-    print(f"   ⚠️  Anomaly injection: ON (every {args.anomaly_every} cycles)")
+    print(f"   ⚠️  Anomaly injection: ON (avg 1 anomaly every {args.anomaly_every} readings per sensor)")
 print()
 
 start_time = time.time()
-
-def generate_moisture():
-    return round(random.uniform(20, 90), 2)
-
-def generate_temperature():
-    return round(random.uniform(10, 40), 2)
-
-def generate_humidity():
-    return round(random.uniform(30, 90), 2)
 
 def send_data(sensor_type, value, plot_id):
     payload = {
@@ -101,21 +92,24 @@ def humidity_pattern(t):
     noise = random.uniform(-3, 3)
     return round(80 - diurnal_cycle(t, 10, 35) + noise, 2)
 
-# Replacement for loop
-cycle_count = 0
-
 def inject_anomaly(sensor_type, normal_value):
+    """Return an anomalous value for the given sensor."""
     if sensor_type == "moisture":
-        return 15  # abnormally low moisture
+        # Randomly choose between very low or very high moisture
+        return random.choice([15, 95])
     if sensor_type == "temperature":
-        return 45  # abnormally high temp
+        # Abnormally high or low temperature
+        return random.choice([5, 45])
     if sensor_type == "humidity":
-        return 20  # abnormally low humidity
+        # Abnormally low or high humidity
+        return random.choice([20, 95])
     return normal_value
+
+# Per-reading anomaly probability derived from anomaly_every
+anomaly_probability = 1.0 / max(args.anomaly_every, 1)
 
 while True:
     now = time.time() - start_time
-    cycle_count += 1
     for pid in PLOT_IDS:
         for sensor_type, pattern_func in [
             ("moisture", moisture_pattern),
@@ -123,7 +117,8 @@ while True:
             ("humidity", humidity_pattern),
         ]:
             v = pattern_func(now)
-            if args.inject_anomaly and cycle_count % args.anomaly_every == 0:
+            # Independent random anomaly decision per (plot, sensor) reading
+            if args.inject_anomaly and random.random() < anomaly_probability:
                 v = inject_anomaly(sensor_type, v)
             send_data(sensor_type, v, pid)
     time.sleep(SEND_INTERVAL)

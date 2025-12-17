@@ -57,9 +57,8 @@ class AgentRecommendation(models.Model):
 
 class UserProfile(models.Model):
     USER_ROLES = [
-        ("admin", "Admin"),
         ("farmer", "Farmer"),
-        ("agent", "Agent"),
+        ("admin", "Admin"),
     ]
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=USER_ROLES, default="farmer")
@@ -67,10 +66,13 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} ({self.role})"
 
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
