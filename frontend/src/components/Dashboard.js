@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { sensorAPI, anomalyAPI, plotsAPI } from '../services/api';
+import { anomalyAPI, plotsAPI } from '../services/api';
 import './Dashboard.css';
 
 const Dashboard = () => {

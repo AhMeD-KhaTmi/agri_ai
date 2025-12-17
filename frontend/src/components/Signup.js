@@ -136,9 +136,11 @@ const Signup = () => {
               disabled={loading}
             >
               <option value="farmer">Farmer</option>
-              <option value="agent">Agent</option>
               <option value="admin">Admin</option>
             </select>
+            <small style={{ color: '#666', fontSize: '0.85rem', marginTop: '0.5rem', display: 'block' }}>
+              Note: Admin role should be assigned by existing admins
+            </small>
           </div>
           {error && <div className="error-message">{error}</div>}
           <button type="submit" disabled={loading} className="signup-btn">

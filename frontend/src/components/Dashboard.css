@@ -1,67 +1,130 @@
 .dashboard {
   padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .dashboard h1 {
   margin-bottom: 2rem;
   color: #2c3e50;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .dashboard-loading {
   text-align: center;
-  padding: 3rem;
+  padding: 4rem;
   font-size: 1.2rem;
+  color: #667eea;
+  font-weight: 500;
 }
 
 .plots-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
 }
 
 .plot-card {
   background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1.5rem;
+  border: none;
+  border-radius: 16px;
+  padding: 2rem;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.plot-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
 }
 
 .plot-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+}
+
+.plot-card:hover::before {
+  transform: scaleX(1);
 }
 
 .plot-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
 }
 
 .plot-header h3 {
   margin: 0;
   color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .status-indicator {
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
   color: white;
   font-size: 0.75rem;
-  font-weight: bold;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 .plot-info {
-  color: #7f8c8d;
+  color: #555;
+  line-height: 1.8;
+}
+
+.plot-info p {
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.plot-info strong {
+  color: #2c3e50;
+  font-weight: 600;
+  min-width: 100px;
 }
 
 .no-plots {
   text-align: center;
-  padding: 3rem;
+  padding: 4rem;
   color: #95a5a6;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  font-size: 1.1rem;
 }
 

@@ -1,54 +1,98 @@
 .plot-detail {
   padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .plot-detail h1 {
   margin-bottom: 2rem;
   color: #2c3e50;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .plot-detail-loading {
   text-align: center;
-  padding: 3rem;
+  padding: 4rem;
   font-size: 1.2rem;
+  color: #667eea;
+  font-weight: 500;
 }
 
 .sensor-selector {
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
 .sensor-selector button {
-  padding: 0.75rem 1.5rem;
-  border: 2px solid #3498db;
+  padding: 0.875rem 2rem;
+  border: 2px solid #667eea;
   background: white;
-  color: #3498db;
-  border-radius: 5px;
+  color: #667eea;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 1rem;
-  transition: all 0.3s;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sensor-selector button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(102, 126, 234, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.sensor-selector button:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .sensor-selector button:hover {
-  background: #ecf0f1;
+  background: #f8f9ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 
 .sensor-selector button.active {
-  background: #3498db;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.sensor-selector button.active::before {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .chart-container {
   background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
 }
 
 .no-data {
   text-align: center;
-  padding: 3rem;
+  padding: 4rem;
   color: #95a5a6;
+  font-size: 1.1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
 }
 
